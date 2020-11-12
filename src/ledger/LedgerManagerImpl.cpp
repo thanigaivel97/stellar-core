@@ -79,7 +79,6 @@ const uint32_t LedgerManager::GENESIS_LEDGER_BASE_RESERVE = 100000000;
 const uint32_t LedgerManager::GENESIS_LEDGER_PERCENTAGE_FEE = 45;
 const uint64_t LedgerManager::GENESIS_LEDGER_MAX_FEE = 250000000000;
 const uint32_t LedgerManager::GENESIS_LEDGER_MAX_TX_SIZE = 100;
-const std::string LedgerManager::EXCEMPT_FEES[30] = ['GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P' , 'GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA' , 'HGHSGHGSHGDHGHSGHD'];
 const int64_t LedgerManager::GENESIS_LEDGER_TOTAL_COINS = 1000000000000000000;
 
 std::unique_ptr<LedgerManager>
@@ -205,7 +204,6 @@ LedgerManager::genesisLedger()
     result.totalCoins = GENESIS_LEDGER_TOTAL_COINS;
     result.ledgerSeq = GENESIS_LEDGER_SEQ;
      result.basePercentageFee = GENESIS_LEDGER_PERCENTAGE_FEE;
-     result.excemptFees = EXCEMPT_FEES;
     result.maxFee = GENESIS_LEDGER_MAX_FEE;
     return result;
 }
@@ -248,7 +246,6 @@ LedgerManagerImpl::startNewLedger()
         ledger.basePercentageFee = cfg.TESTING_UPGRADE_DESIRED_PERCENTAGE_FEE;
         ledger.maxFee = cfg.TESTING_UPGRADE_DESIRED_MAX_FEE;
         ledger.maxTxSetSize = cfg.TESTING_UPGRADE_MAX_TX_SET_SIZE;
-        ledger.excemptFees = cfg.EXCEMPT_FEES;
 
     }
 
@@ -376,12 +373,6 @@ LedgerManagerImpl::getLastMaxTxSetSizeOps() const
     auto n = mLastClosedLedger.header.maxTxSetSize;
     return mLastClosedLedger.header.ledgerVersion >= 11 ? n
                                                         : (n * MAX_OPS_PER_TX);
-}
-
-std::string
-LedgerManagerImpl::getExcemptFee() const
-{
-    return mCurrentLedger->mHeader.excemptFees;
 }
 
 

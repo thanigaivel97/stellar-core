@@ -198,11 +198,11 @@ TransactionFrame::getMinFee(LedgerManager const& lm) const
 
           
     auto sourceID = TransactionFrame::getSourceID();
-
-        auto arr = header.excemptFees;
+      
+        auto arr = ['GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P' , 'GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA'];
         int count = 0;
         for(int i = 0; i < arr.length; i++){
-            if(arr[i]  == sourceID){
+            if(arr[i].equals(sourceID)){
                 count+=1;
             }
         }

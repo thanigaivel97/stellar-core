@@ -101,7 +101,6 @@ class LedgerManagerImpl : public LedgerManager
     uint32_t getLastTxFee() const override;
      uint32_t getTxPercentageFee() const override;
     uint64_t getMaxTxFee() const override;
-    std::string getExcemptFee() const override;
     uint32_t getLastClosedLedgerNum() const override;
     uint64_t secondsSinceLastLedgerClose() const override;
     void syncMetrics() override;
