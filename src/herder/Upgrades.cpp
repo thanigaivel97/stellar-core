@@ -162,11 +162,11 @@ Upgrades::applyTo(LedgerUpgrade const& upgrade, AbstractLedgerTxn& ltx)
         applyReserveUpgrade(ltx, upgrade.newBaseReserve());
         break;
     case LEDGER_UPGRADE_BASE_PERCENTAGE_FEE:
-        ls.loadHeader().current().basePercentageFee =
+        ltx.loadHeader().current().basePercentageFee =
             upgrade.newBasePercentageFee();
         break;
     case LEDGER_UPGRADE_MAX_FEE:
-        ls.loadHeader().current().maxFee = upgrade.newMaxFee();
+        ltx.loadHeader().current().maxFee = upgrade.newMaxFee();
         break;
     default:
     {
@@ -218,24 +218,24 @@ Upgrades::toString() const
             r << fmt::format(", {}={}", s, *o);
         }
     };
-    auto appendInfoUInt64 = [&](std::string const& s,
-                                optional<uint64> const& o) {
-        if (o)
-        {
-            if (!r.size())
-            {
-                r << "upgradetime="
-                  << VirtualClock::systemPointToISOString(mParams.mUpgradeTime);
-            }
-            r << ", " << s << "=" << *o;
-        }
-    };
+    // auto appendInfoUInt64 = [&](std::string const& s,
+    //                             optional<uint64> const& o) {
+    //     if (o)
+    //     {
+    //         if (!r.size())
+    //         {
+    //             r << "upgradetime="
+    //               << VirtualClock::systemPointToISOString(mParams.mUpgradeTime);
+    //         }
+    //         r << ", " << s << "=" << *o;
+    //     }
+    // };
     appendInfo("protocolversion", mParams.mProtocolVersion);
     appendInfo("basefee", mParams.mBaseFee);
     appendInfo("basereserve", mParams.mBaseReserve);
     appendInfo("maxtxsize", mParams.mMaxTxSize);
     appendInfo("basepercentagefee", mParams.mBasePercentageFee);
-    appendInfoUInt64("maxfee", mParams.mMaxFee);
+    appendInfo("maxfee", mParams.mMaxFee);
 
 
     return r.str();
@@ -280,13 +280,13 @@ Upgrades::removeUpgrades(std::vector<UpgradeType>::const_iterator beginUpdates,
             updated = true;
         }
     };
-    auto resetParamUInt64 = [&](optional<uint64>& o, uint64 v) {
-        if (o && *o == v)
-        {
-            o.reset();
-            updated = true;
-        }
-    };
+    // auto resetParamUInt64 = [&](optional<uint64>& o, uint64 v) {
+    //     if (o && *o == v)
+    //     {
+    //         o.reset();
+    //         updated = true;
+    //     }
+    // };
 
     for (auto it = beginUpdates; it != endUpdates; it++)
     {
@@ -318,7 +318,7 @@ Upgrades::removeUpgrades(std::vector<UpgradeType>::const_iterator beginUpdates,
             resetParam(res.mBasePercentageFee, lu.newBasePercentageFee());
             break;
         case LEDGER_UPGRADE_MAX_FEE:
-            resetParamUInt64(res.mMaxFee, lu.newMaxFee());
+            resetParam(res.mMaxFee, lu.newMaxFee());
             break;
         default:
             // skip unknown
