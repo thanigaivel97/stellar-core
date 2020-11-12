@@ -103,7 +103,7 @@ TransactionFrame::getEnvelope()
     return mEnvelope;
 }
 double
-TransactionFrame::getFeeRatio(LedgerStateHeader const& header) const
+TransactionFrame::getFeeRatio(LedgerStateHeader const header) const
 {
     return ((double)getFee() / (double)getMinFee(header));
 }
@@ -150,7 +150,7 @@ TransactionFrame::getFeeBid() const
 
 
 int64_t
-TransactionFrame::getMinFee(LedgerManager const& lm) const
+TransactionFrame::getMinFee(LedgerHeader const& lm) const
 {
     size_t count = mOperations.size();
 
@@ -199,7 +199,7 @@ TransactionFrame::getMinFee(LedgerManager const& lm) const
           
     auto sourceID = TransactionFrame::getSourceID();
       
-        auto arr = ['GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P' , 'GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA'];
+        std::string arr[23] = ['GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P' , 'GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA'];
         int count = 0;
         for(int i = 0; i < arr.length; i++){
             if(arr[i].equals(sourceID)){
@@ -429,14 +429,14 @@ TransactionFrame::commonValidPreSeqNum(AbstractLedgerTxn& ltx, bool chargeFee,
         getResult().result.code(txNOT_SUPPORTED);
         return false;
     }
-    if (mEnvelope.tx.fee > lm->getMaxTxFee())
-    {
-        app.getMetrics()
-            .NewMeter({"transaction", "invalid", "fee-over-max"}, "transaction")
-            .Mark();
-        getResult().result.code(txFEE_OVER_MAX);
-        return false;
-    }
+    // if (mEnvelope.tx.fee > lm->getMaxTxFee())
+    // {
+    //     app.getMetrics()
+    //         .NewMeter({"transaction", "invalid", "fee-over-max"}, "transaction")
+    //         .Mark();
+    //     getResult().result.code(txFEE_OVER_MAX);
+    //     return false;
+    // }
     if (getNumOperations() == 0)
     {
         getResult().result.code(txMISSING_OPERATION);
