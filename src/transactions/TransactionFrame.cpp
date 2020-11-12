@@ -103,7 +103,7 @@ TransactionFrame::getEnvelope()
     return mEnvelope;
 }
 double
-TransactionFrame::getFeeRatio(LedgerStateHeader const header) const
+TransactionFrame::getFeeRatio(LedgerHeader const& header) const
 {
     return ((double)getFee() / (double)getMinFee(header));
 }
@@ -150,7 +150,7 @@ TransactionFrame::getFeeBid() const
 
 
 int64_t
-TransactionFrame::getMinFee(LedgerHeader const& lm) const
+TransactionFrame::getMinFee(LedgerManager const& lm) const
 {
     size_t count = mOperations.size();
 
@@ -197,19 +197,19 @@ TransactionFrame::getMinFee(LedgerHeader const& lm) const
     }
 
           
-    auto sourceID = TransactionFrame::getSourceID();
+    // auto sourceID = TransactionFrame::getSourceID();
       
-        std::string arr[23] = ['GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P' , 'GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA'];
-        int count = 0;
-        for(int i = 0; i < arr.length; i++){
-            if(arr[i].equals(sourceID)){
-                count+=1;
-            }
-        }
+    //     std::string arr[23] = ['GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P' , 'GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA'];
+    //     int count = 0;
+    //     for(int i = 0; i < arr.length; i++){
+    //         if(arr[i].equals(sourceID)){
+    //             count+=1;
+    //         }
+    //     }
 
-        if(count >= 1){
-            return baseFee;
-        }
+    //     if(count >= 1){
+    //         return baseFee;
+    //     }
 
     return baseFee + accumulatedFeeFromPercentage;
 }
@@ -417,7 +417,7 @@ TransactionFrame::commonValidPreSeqNum(AbstractLedgerTxn& ltx, bool chargeFee,
                                        uint64_t upperBoundCloseTimeOffset)
 {
     ZoneScoped;
-    LedgerManager* lm;
+    // LedgerManager* lm;
     // this function does validations that are independent of the account state
     //    (stay true regardless of other side effects)
     auto header = ltx.loadHeader();

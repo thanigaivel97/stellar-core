@@ -160,7 +160,7 @@ class TransactionFrame : public TransactionFrameBase
 
     int64_t getFeeBid() const override;
 
-    int64_t getMinFee(LedgerHeader const& header) const override;
+    int64_t getMinFee(LedgerManager const& header) const override;
 
     double getFeeRatio(LedgerHeader const& header) const;
 
