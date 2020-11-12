@@ -237,7 +237,7 @@ Upgrades::toString() const
     appendInfo("basereserve", mParams.mBaseReserve);
     appendInfo("maxtxsize", mParams.mMaxTxSize);
     appendInfo("basepercentagefee", mParams.mBasePercentageFee);
-    appendInfo("maxfee", mParams.mMaxFee);
+    appendInfoUInt64("maxfee", mParams.mMaxFee);
 
 
     return r.str();
