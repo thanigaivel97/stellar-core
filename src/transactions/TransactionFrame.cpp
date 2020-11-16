@@ -103,7 +103,7 @@ TransactionFrame::getEnvelope()
     return mEnvelope;
 }
 double
-TransactionFrame::getFeeRatio(LedgerStateHeader const& header) const
+TransactionFrame::getFeeRatio(LedgerHeader const& header) const
 {
     return ((double)getFee() / (double)getMinFee(header));
 }
