@@ -39,7 +39,6 @@
 #include "medida/metrics_registry.h"
 
 #include <algorithm>
-#include <math.h>
 #include <numeric>
 
 namespace stellar
@@ -102,11 +101,6 @@ TransactionFrame::getEnvelope()
 {
     return mEnvelope;
 }
-double
-TransactionFrame::getFeeRatio(LedgerHeader const& header) const
-{
-    return ((double)getFee() / (double)getMinFee(header));
-}
 
 SequenceNumber
 TransactionFrame::getSeqNum() const
@@ -148,78 +142,11 @@ TransactionFrame::getFeeBid() const
                                                    : mEnvelope.v1().tx.fee;
 }
 
-
 int64_t
-TransactionFrame::getMinFee(LedgerHeader const& lm) const
+TransactionFrame::getMinFee(LedgerHeader const& header) const
 {
-    size_t count = mOperations.size();
-
-    if (count == 0)
-    {
-        count = 1;
-    }
-
-    auto baseFee = lm.getTxFee() * count;
-
-    int64_t accumulatedFeeFromPercentage = 0;
-    double percentageFeeAsDouble =
-        (double)lm.getTxPercentageFee() / (double)10000;
-
-    for (auto& op : mOperations)
-    {
-        auto operation = op->getOperation();
-
-        int fieldNumber = operation.body.type();
-
-        if (fieldNumber == 0)
-        {
-            auto percentFeeFloat =
-                operation.body.createAccountOp().startingBalance *
-                percentageFeeAsDouble;
-            int64_t roundedPercentFee = (int64_t)percentFeeFloat;
-            accumulatedFeeFromPercentage =
-                accumulatedFeeFromPercentage + roundedPercentFee;
-        }
-
-        if (fieldNumber == 1)
-        {
-            int8_t assetType =
-                operation.body.paymentOp().asset.type(); // 0 is native
-            if (assetType == 0)
-            {
-                auto percentFeeFloat =
-                    operation.body.paymentOp().amount * percentageFeeAsDouble;
-                int64_t roundedPercentFee = (int64_t)percentFeeFloat;
-                accumulatedFeeFromPercentage =
-                    accumulatedFeeFromPercentage + roundedPercentFee;
-            }
-        }
-    }
-
-          
-    // auto sourceID = TransactionFrame::getSourceID();
-      
-    //     std::string arr[40] = ['GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P' , 'GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA'];
-    //     int count = 0;
-    //     for(int i = 0; i < arr.length; i++){
-    //         if(arr[i].equals(sourceID)){
-    //             count+=1;
-    //         }
-    //     }
-
-    //     if(count >= 1){
-    //         return baseFee;
-    //     }
-
-    return baseFee + accumulatedFeeFromPercentage;
+    return ((int64_t)header.baseFee) * std::max<int64_t>(1, getNumOperations());
 }
-
-
-// int64_t
-// TransactionFrame::getMinFee(LedgerHeader const& header) const
-// {
-//     return ((int64_t)header.baseFee) * std::max<int64_t>(1, getNumOperations());
-// }
 
 int64_t
 TransactionFrame::getFee(LedgerHeader const& header, int64_t baseFee,
@@ -244,7 +171,6 @@ TransactionFrame::getFee(LedgerHeader const& header, int64_t baseFee,
         return getFeeBid();
     }
 }
-
 
 void
 TransactionFrame::addSignature(SecretKey const& secretKey)
@@ -417,7 +343,6 @@ TransactionFrame::commonValidPreSeqNum(AbstractLedgerTxn& ltx, bool chargeFee,
                                        uint64_t upperBoundCloseTimeOffset)
 {
     ZoneScoped;
-    LedgerManager* lm;
     // this function does validations that are independent of the account state
     //    (stay true regardless of other side effects)
     auto header = ltx.loadHeader();
@@ -429,14 +354,7 @@ TransactionFrame::commonValidPreSeqNum(AbstractLedgerTxn& ltx, bool chargeFee,
         getResult().result.code(txNOT_SUPPORTED);
         return false;
     }
-    // if (mEnvelope.tx.fee > lm->getMaxTxFee())
-    // {
-    //     app.getMetrics()
-    //         .NewMeter({"transaction", "invalid", "fee-over-max"}, "transaction")
-    //         .Mark();
-    //     getResult().result.code(txFEE_OVER_MAX);
-    //     return false;
-    // }
+
     if (getNumOperations() == 0)
     {
         getResult().result.code(txMISSING_OPERATION);
@@ -470,7 +388,7 @@ TransactionFrame::commonValidPreSeqNum(AbstractLedgerTxn& ltx, bool chargeFee,
         getResult().result.code(txNO_ACCOUNT);
         return false;
     }
- 
+
     return true;
 }
 
