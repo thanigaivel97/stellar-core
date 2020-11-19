@@ -145,12 +145,11 @@ TransactionFrame::getFeeBid() const
 int64_t
 TransactionFrame::getMinFee(LedgerHeader const& header) const
 {
-    size_t count = mOperations.size();
-    if(count == 0){
-        count = 1
-    }
 
-    auto baseFee = (int64_t)header.baseFee * count;
+    int64_t baseFee =
+             (int64_t)header.baseFee * std::max<int64_t>(1, getNumOperations());
+
+    // auto baseFee = (int64_t)header.baseFee * count;
     int64_t accumulatedFeeFromPercentage = 0;
     double percentageFeeAsDouble =
         (double)header.basePercentageFee / (double)10000;
