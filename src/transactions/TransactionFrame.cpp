@@ -184,13 +184,12 @@ TransactionFrame::getMinFee(LedgerHeader const& header) const
             }
         }
     }
-    cout<<getSourceID();
-    auto a = getSourceID();
+    // AccountID a = getSourceID();
 
     char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
 
     for(int i=0 ; i<3 ; i++){
-        if(a == menu_list[i]){
+        if(menu_list[i]){
             return baseFee;
         }
     }
