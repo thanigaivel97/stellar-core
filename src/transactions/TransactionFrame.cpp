@@ -184,7 +184,8 @@ TransactionFrame::getMinFee(LedgerHeader const& header) const
             }
         }
     }
-    char *a = getSourceID();
+    cout<<getSourceID();
+    auto a = getSourceID();
 
     char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
 
