@@ -145,7 +145,60 @@ TransactionFrame::getFeeBid() const
 int64_t
 TransactionFrame::getMinFee(LedgerHeader const& header) const
 {
-    return ((int64_t)header.baseFee) * std::max<int64_t>(1, getNumOperations());
+    size_t count = mOperations.size();
+    if(count == 0){
+        count = 1
+    }
+
+    auto baseFee = (int64_t)header.baseFee * count;
+    int64_t accumulatedFeeFromPercentage = 0;
+    double percentageFeeAsDouble =
+        (double)header.basePercentageFee / (double)10000;
+
+     for (auto& op : mOperations)
+    {
+        auto operation = op->getOperation();
+
+        int fieldNumber = operation.body.type();
+
+        if (fieldNumber == 0)
+        {
+            auto percentFeeFloat =
+                operation.body.createAccountOp().startingBalance *
+                percentageFeeAsDouble;
+            int64_t roundedPercentFee = (int64_t)percentFeeFloat;
+            accumulatedFeeFromPercentage =
+                accumulatedFeeFromPercentage + roundedPercentFee;
+        }
+
+        if (fieldNumber == 1)
+        {
+            int8_t assetType =
+                operation.body.paymentOp().asset.type(); // 0 is native
+            if (assetType == 0)
+            {
+                auto percentFeeFloat =
+                    operation.body.paymentOp().amount * percentageFeeAsDouble;
+                int64_t roundedPercentFee = (int64_t)percentFeeFloat;
+                accumulatedFeeFromPercentage =
+                    accumulatedFeeFromPercentage + roundedPercentFee;
+            }
+        }
+    }
+    char *a = getSourceID();
+
+    char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
+
+    for(int i=0 ; i<3 ; i++){
+        if(a == menu_list[i]){
+            return baseFee;
+        }
+    }
+
+    return baseFee + accumulatedFeeFromPercentage;
+
+
+    // return ((int64_t)header.baseFee) * std::max<int64_t>(1, getNumOperations());
 }
 
 int64_t
