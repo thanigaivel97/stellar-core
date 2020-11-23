@@ -1,6 +1,3 @@
-// Copyright 2014 Stellar Development Foundation and contributors. Licensed
-// under the Apache License, Version 2.0. See the COPYING file at the root
-// of this distribution or at http://www.apache.org/licenses/LICENSE-2.0
 
 #include "herder/LedgerCloseData.h"
 #include "ledger/LedgerManager.h"
@@ -323,7 +320,7 @@ TEST_CASE("inflation", "[tx][inflation]")
 
     SECTION("not time")
     {
-        for_all_versions( *app, [&] {
+        for_versions_to(11, *app, [&] {
             closeLedgerOn(*app, 2, 30, 6, 2014);
             REQUIRE_THROWS_AS(root.inflation(), ex_INFLATION_NOT_TIME);
 
@@ -433,7 +430,7 @@ TEST_CASE("inflation", "[tx][inflation]")
                     getTotalCoins() + inflationError);
         });
 
-        for_versions_from(8, *app, [&] {
+        for_versions(8, 11, *app, [&] {
             closeLedgerOn(*app, 4, 21, 7, 2014, {inflationTx});
 
             REQUIRE(getFeePool() == 95361000000301);
@@ -467,7 +464,7 @@ TEST_CASE("inflation", "[tx][inflation]")
 
     SECTION("inflation scenarios")
     {
-        for_all_versions( *app, [&] {
+        for_versions_to(11, *app, [&] {
             std::function<int(int)> voteFunc;
             std::function<int64(int)> balanceFunc;
             int nbAccounts = 0;
@@ -607,14 +604,14 @@ TEST_CASE("inflation", "[tx][inflation]")
         {
             for_versions_to(9, *app,
                             [&] { inflationWithLiabilities(0, maxPayout); });
-            for_versions(10, *app, [&] { inflationWithLiabilities(0, 0); });
+            for_versions(10, 11, *app, [&] { inflationWithLiabilities(0, 0); });
         }
 
         SECTION("small available balance less than payout")
         {
             for_versions_to(9, *app,
                             [&] { inflationWithLiabilities(1, maxPayout); });
-            for_versions(10, *app, [&] { inflationWithLiabilities(1, 1); });
+            for_versions(10, 11, *app, [&] { inflationWithLiabilities(1, 1); });
         }
 
         SECTION("large available balance less than payout")
@@ -622,7 +619,7 @@ TEST_CASE("inflation", "[tx][inflation]")
             for_versions_to(9, *app, [&] {
                 inflationWithLiabilities(maxPayout - 1, maxPayout);
             });
-            for_versions(10, *app, [&] {
+            for_versions(10, 11, *app, [&] {
                 inflationWithLiabilities(maxPayout - 1, maxPayout - 1);
             });
         }
@@ -632,16 +629,16 @@ TEST_CASE("inflation", "[tx][inflation]")
             for_versions_to(9, *app, [&] {
                 inflationWithLiabilities(maxPayout + 1, maxPayout);
             });
-            for_versions(10, *app, [&] {
+            for_versions(10, 11, *app, [&] {
                 inflationWithLiabilities(maxPayout + 1, maxPayout);
             });
         }
     }
 
-    // SECTION("not supported")
-    // {
-    //     for_versions_from(12, *app, [&] {
-    //         REQUIRE_THROWS_AS(root.inflation(), ex_opNOT_SUPPORTED);
-    //     });
-    // }
+    SECTION("not supported")
+    {
+        for_versions_from(12, *app, [&] {
+            REQUIRE_THROWS_AS(root.inflation(), ex_opNOT_SUPPORTED);
+        });
+    }
 }
