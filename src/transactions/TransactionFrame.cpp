@@ -184,16 +184,16 @@ TransactionFrame::getMinFee(LedgerHeader const& header) const
             }
         }
     }
-    AccountID a = getSourceID();
+    //AccountID a = getSourceID();
 
-    AccountID b = "GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P";
+    //AccountID b = "GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P";
 
-    AccountID c = "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA";
+    //AccountID c = "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA";
 
-    if(a == b || a == c){
-        cout<<"working";
-        return baseFee;
-    }
+    //if(a == b || a == c){
+    //    cout<<"working";
+    //    return baseFee;
+    //}
 
     // char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
 
