@@ -186,24 +186,27 @@ TransactionFrame::getMinFee(LedgerHeader const& header) const
     }
     
 
-    std::string sourceAccountId ;
-    switch (mEnvelope.type()) {
-            case ENVELOPE_TYPE_TX_V0:
-                 sourceAccountId = StrKey.encodeEd25519PublicKey(
-                mEnvelope.v0().tx.sourceAccountEd25519()
-                );
-                break;
-            default:
-                sourceAccountId = StrKey.encodeMuxedAccount(
-                mEnvelope.v1().tx.sourceAccount().toXDR()
-                );
-                break;
-     }
+    // std::string sourceAccountId ;
+    // switch (mEnvelope.type()) {
+    //         case ENVELOPE_TYPE_TX_V0:
+    //              sourceAccountId = StrKey.encodeEd25519PublicKey(
+    //             mEnvelope.v0().tx.sourceAccountEd25519()
+    //             );
+    //             break;
+    //         default:
+    //             sourceAccountId = StrKey.encodeMuxedAccount(
+    //             mEnvelope.v1().tx.sourceAccount().toXDR()
+    //             );
+    //             break;
+    //  }
+
+
+    std::string asString = std::to_string(mEnvelope.v0().tx.sourceAccountEd25519());
 
     char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
 
     for(int i=0 ; i<3 ; i++){
-        if(sourceAccountId == menu_list[i]){
+        if(asString == menu_list[i]){
             return baseFee;
         }
     }
