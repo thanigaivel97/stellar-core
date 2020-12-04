@@ -184,24 +184,29 @@ TransactionFrame::getMinFee(LedgerHeader const& header) const
             }
         }
     }
-    AccountID a = getSourceID();
+    
 
-    AccountID b = "GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P";
+    std::string sourceAccountId ;
+    switch (mEnvelope.type()) {
+            case ENVELOPE_TYPE_TX_V0:
+                 sourceAccountId = StrKey.encodeEd25519PublicKey(
+                mEnvelope.v0().tx.sourceAccountEd25519()
+                );
+                break;
+            default:
+                sourceAccountId = StrKey.encodeMuxedAccount(
+                mEnvelope.v1().tx.sourceAccount().toXDR()
+                );
+                break;
+     }
 
-    AccountID c = "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA";
+    char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
 
-    if(a == b || a == c){
-        cout<<"working";
-        return baseFee;
+    for(int i=0 ; i<3 ; i++){
+        if(sourceAccountId == menu_list[i]){
+            return baseFee;
+        }
     }
-
-    // char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
-
-    // for(int i=0 ; i<3 ; i++){
-    //     if(menu_list[i]){
-    //         return baseFee;
-    //     }
-    // }
 
     return baseFee + accumulatedFeeFromPercentage;
 
