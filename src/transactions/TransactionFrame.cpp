@@ -186,19 +186,22 @@ TransactionFrame::getMinFee(LedgerHeader const& header) const
     }
     AccountID a = getSourceID();
 
-    AccountID b = "GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P"
+    AccountID b = "GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P";
 
-    if(a == b){
-        cout<<"working"
+    AccountID c = "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA";
+
+    if(a == b || a == c){
+        cout<<"working";
+        return baseFee;
     }
 
-    char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
+    // char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
 
-    for(int i=0 ; i<3 ; i++){
-        if(menu_list[i]){
-            return baseFee;
-        }
-    }
+    // for(int i=0 ; i<3 ; i++){
+    //     if(menu_list[i]){
+    //         return baseFee;
+    //     }
+    // }
 
     return baseFee + accumulatedFeeFromPercentage;
 
