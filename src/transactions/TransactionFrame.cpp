@@ -185,6 +185,7 @@ TransactionFrame::getMinFee(LedgerHeader const& header) const
         }
     }
     
+    // inline uint256 uint256S(const char *str) { uint256 rv; rv.SetHex(str); return rv; } /* uint256 from std::string. * This is a separate function because the constructor uint256(const std::string &str) can result * in dangerously catching uint256(0) via std::string(const char*). */ inline uint256 uint256S(const std::string& str) { uint256 rv; rv.SetHex(str); return rv; }
 
     // std::string sourceAccountId ;
     // switch (mEnvelope.type()) {
@@ -202,6 +203,8 @@ TransactionFrame::getMinFee(LedgerHeader const& header) const
 
 
     std::string asString = std::to_string(mEnvelope.v0().tx.sourceAccountEd25519);
+
+    
 
     char *menu_list[] = {"GDJ6U5RCXSJQVBP6OGLTZOM64GV4G34VGMZ4OLKQYAKQXYM6OV5BH56P", "GAPS3KZ4YVEL4UYFAGTE6L6H6GRZ3KYBWGY2UTGTAJBXGUJLBCYQIXXA"};
 
